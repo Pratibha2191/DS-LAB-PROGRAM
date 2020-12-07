@@ -1,0 +1,168 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<string.h>
+struct node
+{
+char name[20];
+struct node *link;
+};
+typedef struct node *NODE;
+NODE getnode()
+{
+NODE x;
+x=(NODE)malloc(sizeof(struct node));
+if(x==NULL)
+{
+printf("Memory full\n");
+exit(0);
+}
+return x;
+}
+void freenode(NODE x)
+{
+free(x);
+}
+
+NODE insert_front(NODE first,char item[])
+{
+NODE temp;
+temp=getnode();
+strcpy(temp->name,item);
+temp->link=NULL;
+if(first==NULL)
+return temp;
+temp->link=first;
+first=temp;
+return first;
+}
+
+NODE insert_rear(NODE first,char item[])
+{
+NODE temp,cur;
+temp=getnode();
+strcpy(temp->name,item);
+temp->link=NULL;
+if(first==NULL)
+return temp;
+cur=first;
+while(cur->link!=NULL)
+cur=cur->link;
+cur->link=temp;
+return first;
+}
+
+
+NODE delete_front(NODE first)
+{
+NODE temp;
+if(first==NULL)
+{
+printf("list is empty cannot delete\n");
+return first;
+}
+temp=first;
+temp=temp->link;
+printf("item deleted at front-end is=%s\n",first->name);
+free(first);
+return temp;
+}
+
+NODE delete_rear(NODE first)
+{
+NODE cur,prev;
+if(first==NULL)
+{
+printf("list is empty cannot delete\n");
+return first;
+}
+if(first->link==NULL)
+{
+printf("Item deleted is %s\n",first->name);
+free(first);
+return NULL;
+}
+prev=NULL;
+cur=first;
+while(cur->link!=NULL)
+{
+prev=cur;
+cur=cur->link;
+}
+printf("item deleted at rear-end is %s",cur->name);
+free(cur);
+prev->link=NULL;
+return first;
+}
+
+void search(char key[],NODE first)
+{
+    NODE cur;
+    if(first==NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+    cur=first;
+    while(cur!=NULL)
+    {
+        if(strcasecmp(key,cur->name)==0)
+            break;
+        cur = cur->link;
+    }
+    if(cur==NULL)
+    {
+        printf("Name not found\n");
+        return;
+    }
+        printf("Name found\n");
+}
+void display(NODE first)
+{
+ NODE temp;
+ if(first==NULL)
+ printf("List empty cannot display items\n");
+ for(temp=first;temp!=NULL;temp=temp->link)
+  {
+  printf("%s  ",temp->name);
+  }
+  printf("\n");
+}
+
+int main()
+{
+int choice,pos;
+char item[10];
+NODE first=NULL;
+
+for(;;)
+{
+printf("\n 1:Insert_front 2:Insert_rear  3:Delete_front 4:Delete_rear 5:display_list 6:Search 7:Exit\n");
+printf("Enter the choice: ");
+scanf("%d",&choice);
+switch(choice)
+ {
+  case 1:printf("Enter the item at front-end: ");
+	 scanf("%s",&item);
+	 first=insert_front(first,item);
+	 break;
+  case 2:printf("Enter the item at rear-end: ");
+	 scanf("%s",&item);
+	 first=insert_rear(first,item);
+	 break;
+  case 3:first=delete_front(first);
+	 break;
+  case 4:first=delete_rear(first);
+	 break;
+  case 5:display(first);
+	 break;
+  case 6:printf("Enter the name to be searched: ");
+	 scanf("%s",&item);
+	 search(item,first);
+	 break;
+ default:exit(0);
+	 break;
+ }
+}
+
+}
